@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.RepairCardMapper">
+    <resultMap id="repairCardMap" type="cn.jc.entity.RepairCard">
+        <id property="repId" column="Rep_Id"/>
+        <result property="repEmp" column="Rep_Emp"/>
+        <result property="repTime" column="Rep_Time"/>
+        <result property="repReason" column="Rep_Reason"/>
+    </resultMap>
+    <select id="list" resultMap="repairCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_repaircard limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_repaircard
+    </select>
+    <insert id="insertRepairCard" parameterType="cn.jc.entity.RepairCard">
+        insert into t_repaircard (Rep_Emp,Rep_Time,Rep_Reason)
+        values (#{repEmp},#{repTime},#{repReason})
+    </insert>
+    <delete id="deleteRepairCard">
+        delete from t_repaircard where Rep_Id =#{repId}
+    </delete>
+    <select id="loadRepairCard" parameterType="java.lang.Integer" resultMap="repairCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_repaircard where Rep_Id =#{repId}
+    </select>
+    <update id="updateRepairCard" parameterType="cn.jc.entity.RepairCard">
+        update t_repaircard set Rep_Emp=#{repEmp},Rep_Time=#{repTime},Rep_Reason=#{repReason}
+        where Rep_Id =#{repId}
+    </update>
+    <select id="listLimitTimeForPage" resultMap="repairCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_repaircard where Rep_Emp=#{repEmp} and Rep_Time BETWEEN #{repTimeBegin} and #{repTimeEnd} limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotalLimitForPage" resultType="java.lang.Integer">
+       select count(1) from t_repaircard where Rep_Emp=#{repEmp} and Rep_Time BETWEEN #{repTimeBegin} and #{repTimeEnd}
+    </select>
+    <sql id="BaseColumn">
+      Rep_Id,Rep_Emp,Rep_Time,Rep_Reason
+    </sql>
+</mapper>

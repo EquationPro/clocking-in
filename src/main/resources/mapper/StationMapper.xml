@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.StationMapper">
+    <resultMap id="stationMap" type="cn.jc.entity.Station">
+        <id property="staId" column="Sta_Id"/>
+        <result property="staCode" column="Sta_Code"/>
+        <result property="staName" column="Sta_Name"/>
+        <result property="staDepartment" column="Sta_Department"/>
+        <result property="staHead" column="Sta_Head"/>
+        <result property="staCategory" column="Sta_Category"/>
+        <result property="staDesc" column="Sta_Desc"/>
+    </resultMap>
+    <select id="list" resultMap="stationMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_station limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_station
+    </select>
+    <insert id="insertStation" parameterType="cn.jc.entity.Station">
+        insert into t_station (Sta_Code,Sta_Name,Sta_Department,Sta_Head,Sta_Category,Sta_Desc)
+        values (#{staCode},#{staName},#{staDepartment},#{staHead},#{staCategory},#{staDesc})
+    </insert>
+    <delete id="deleteStation">
+        delete from t_station where Sta_Id =#{staId}
+    </delete>
+    <select id="loadStation" parameterType="java.lang.Integer" resultMap="stationMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_station where Sta_Id =#{staId}
+    </select>
+    <update id="updateStation" parameterType="cn.jc.entity.Station">
+        update t_station set Sta_Code=#{staCode},Sta_Name=#{staName},Sta_Department=#{staDepartment},Sta_Head=#{staHead},Sta_Category=#{staCategory},Sta_Desc=#{staDesc}
+        where Sta_Id =#{staId}
+    </update>
+    <select id="listAll" resultMap="stationMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_station
+    </select>
+    <!-- 使用或者-->
+    <select id="listSearch" resultMap="stationMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_station where Sta_Name like concat('%',#{staNameOrStaCode},'%') or Sta_Code like
+        concat('%',#{staNameOrStaCode},'%') limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_station  where Sta_Name like concat('%',#{staNameOrStaCode},'%') or Sta_Code like concat('%',#{staNameOrStaCode},'%')
+    </select>
+
+    <sql id="BaseColumn">
+      Sta_Id,Sta_Code,Sta_Name,Sta_Department,Sta_Head,Sta_Category,Sta_Desc
+    </sql>
+</mapper>

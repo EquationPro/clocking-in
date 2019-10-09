@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.PunchCardMapper">
+    <resultMap id="punchCardMap" type="cn.jc.entity.PunchCard">
+        <id property="punId" column="Pun_Id"/>
+        <result property="punEmp" column="Pun_emp"/>
+        <result property="punTime" column="Pun_Time"/>
+        <result property="punRemark" column="Pun_Remark"/>
+    </resultMap>
+    <select id="list" resultMap="punchCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_punchcard limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_punchcard
+    </select>
+    <insert id="insertPunchCard" parameterType="cn.jc.entity.PunchCard">
+        insert into t_punchcard (Pun_emp,Pun_Time,Pun_Remark)
+        values (#{punEmp},#{punTime},#{punRemark})
+    </insert>
+    <delete id="deletePunchCard">
+        delete from t_punchcard where Pun_Id =#{punId}
+    </delete>
+    <select id="loadPunchCard" parameterType="java.lang.Integer" resultMap="punchCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_punchcard where Pun_Id =#{punId}
+    </select>
+    <update id="updatePunchCard" parameterType="cn.jc.entity.PunchCard">
+        update t_punchcard set Pun_emp=#{punEmp},Pun_Time=#{punTime},Pun_Remark=#{punRemark}
+        where Pun_Id =#{punId}
+    </update>
+    <select id="listLimitTimeForPage" resultMap="punchCardMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_punchcard where Pun_emp=#{punEmp} and Pun_Time BETWEEN #{punTimeBegin} and #{punTimeEnd} limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotalLimitForPage" resultType="java.lang.Integer">
+       select count(1) from t_punchcard where Pun_emp=#{punEmp} and Pun_Time BETWEEN #{punTimeBegin} and #{punTimeEnd}
+    </select>
+
+    <sql id="BaseColumn">
+      Pun_Id,Pun_emp,Pun_Time,Pun_Remark
+    </sql>
+</mapper>

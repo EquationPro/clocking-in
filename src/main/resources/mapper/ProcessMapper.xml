@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.ProcessMapper">
+    <resultMap id="processMap" type="cn.jc.entity.Process">
+        <id property="proId" column="Pro_Id"/>
+        <result property="proFormId" column="Pro_FormId"/>
+        <result property="proEmp" column="Pro_Emp"/>
+        <result property="proExamine" column="Pro_Examine"/>
+        <result property="proState" column="Pro_State"/>
+    </resultMap>
+    <select id="list" resultMap="processMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_process limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_process
+    </select>
+    <insert id="insertProcess" parameterType="cn.jc.entity.Process">
+        insert into t_process (Pro_FormId,Pro_Emp,Pro_Examine,Pro_State)
+        values (#{proFormId},#{proEmp},#{proExamine},#{proState})
+    </insert>
+    <delete id="deleteProcess">
+        delete from t_process where Pro_Id =#{proId}
+    </delete>
+    <select id="loadProcess" parameterType="java.lang.Integer" resultMap="processMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_process where Pro_Id =#{proId}
+    </select>
+    <update id="updateProcess" parameterType="cn.jc.entity.Process">
+        update t_process set Pro_FormId=#{proFormId},Pro_Emp=#{proEmp},Pro_Examine=#{proExamine},Pro_State=#{proState}
+        where Pro_Id =#{proId}
+    </update>
+    <select id="loadProcessByFormId" parameterType="java.lang.Integer" resultMap="processMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_process where Pro_FormId =#{proFormId}
+    </select>
+    <!--模糊查询-->
+    <select id="listSearch" resultMap="processMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_process where Pro_FormId like concat('%',#{proFormId},'%') limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_process  where Pro_FormId like concat('%',#{proFormId},'%')
+    </select>
+
+    <sql id="BaseColumn">
+      Pro_Id,Pro_FormId,Pro_Emp,Pro_Examine,Pro_State
+    </sql>
+</mapper>

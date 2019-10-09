@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.ClassesMapper">
+    <resultMap id="classesMap" type="cn.jc.entity.Classes">
+        <id property="claId" column="Cla_Id"/>
+        <result property="claCode" column="Cla_Code"/>
+        <result property="claName" column="Cla_Name"/>
+        <result property="claBegin" column="Cla_Begin"/>
+        <result property="claEnd" column="Cla_End"/>
+        <result property="claRemark" column="Cla_Remark"/>
+    </resultMap>
+    <select id="list" resultMap="classesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_classes limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_classes
+    </select>
+    <insert id="insertClasses" parameterType="cn.jc.entity.Classes">
+        insert into t_classes (Cla_Code,Cla_Name,Cla_Begin,Cla_End,Cla_Remark)
+        values (#{claCode},#{claName},#{claBegin},#{claEnd},#{claRemark})
+    </insert>
+    <delete id="deleteClasses">
+        delete from t_classes where Cla_Id =#{claId}
+    </delete>
+    <select id="loadClasses" parameterType="java.lang.Integer" resultMap="classesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_classes where Cla_Id =#{claId}
+    </select>
+    <update id="updateClasses" parameterType="cn.jc.entity.Classes">
+        update t_classes set Cla_Code=#{claCode},Cla_Name=#{claName},Cla_Begin=#{claBegin},Cla_End=#{claEnd},Cla_Remark=#{claRemark}
+        where Cla_Id =#{claId}
+    </update>
+    <!-- 使用或者-->
+    <select id="listSearch" resultMap="classesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_classes where Cla_Name like concat('%',#{claNameOrClaCode},'%')  or Cla_Code like concat('%',#{claNameOrClaCode},'%') limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_classes  where Cla_Name like concat('%',#{claNameOrClaCode},'%') or Cla_Code like concat('%',#{claNameOrClaCode},'%')
+    </select>
+
+    <sql id="BaseColumn">
+      Cla_Id,Cla_Code,Cla_Name,Cla_Begin,Cla_End,Cla_Remark
+    </sql>
+</mapper>

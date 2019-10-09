@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.EmployeesMapper">
+    <resultMap id="employeesMap" type="cn.jc.entity.Employees">
+        <id property="empId" column="Emp_Id"/>
+        <result property="empCode" column="Emp_Code"/>
+        <result property="empName" column="Emp_Name"/>
+        <result property="empSex" column="Emp_Sex"/>
+        <result property="empAge" column="Emp_Age"/>
+        <result property="empNation" column="Emp_Nation"/>
+        <result property="empIdentity" column="Emp_Identity"/>
+        <result property="empSalary" column="Emp_Salary"/>
+        <result property="empPhone" column="Emp_Phone"/>
+        <result property="empContact" column="Emp_Contact"/>
+        <result property="empContactPhone" column="Emp_ContactPhone"/>
+        <result property="empStationId" column="Emp_StationId"/>
+        <result property="empCla" column="Emp_Cla"/>
+        <result property="empDesc" column="Emp_Desc"/>
+    </resultMap>
+    <select id="list" resultMap="employeesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_employees limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_employees
+    </select>
+    <insert id="insertEmployees" parameterType="cn.jc.entity.Employees">
+        insert into t_employees (Emp_Code,Emp_Name,Emp_Sex,Emp_Age,Emp_Nation,Emp_Identity,Emp_Salary,Emp_Phone,Emp_Contact,Emp_ContactPhone,Emp_StationId,Emp_Cla,Emp_Desc)
+        values (#{empCode},#{empName},#{empSex},#{empAge},#{empNation},#{empIdentity},#{empSalary},#{empPhone},#{empContact},#{empContactPhone},#{empStationId},#{empCla},#{empDesc})
+    </insert>
+    <delete id="deleteEmployees">
+        delete from t_employees where Emp_Id =#{empId}
+    </delete>
+    <select id="loadEmployees" parameterType="java.lang.Integer" resultMap="employeesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_employees where Emp_Id =#{empId}
+    </select>
+    <update id="updateEmployees" parameterType="cn.jc.entity.Employees">
+        update t_employees set Emp_Code=#{empCode},Emp_Name=#{empName},Emp_Sex=#{empSex},Emp_Age=#{empAge},Emp_Nation=#{empNation}
+        ,Emp_Identity=#{empIdentity},Emp_Salary=#{empSalary},Emp_Phone=#{empPhone},Emp_Contact=#{empContact},Emp_ContactPhone=#{empContactPhone}
+        ,Emp_StationId=#{empStationId},Emp_Cla=#{empCla},Emp_Desc=#{empDesc}
+        where Emp_Id =#{empId}
+    </update>
+    <select id="loadByEmpCodeEmployees" parameterType="java.lang.String" resultMap="employeesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_employees where Emp_Code =#{empCode}
+    </select>
+    <select id="listAll" resultMap="employeesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_employees
+    </select>
+    <!-- 使用或者-->
+    <select id="listSearch" resultMap="employeesMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_employees where Emp_Name like concat('%',#{empNameOrEmpCode},'%')  or Emp_Code like concat('%',#{empNameOrEmpCode},'%') limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_employees  where Emp_Name like concat('%',#{empNameOrEmpCode},'%') or Emp_Code like concat('%',#{empNameOrEmpCode},'%')
+    </select>
+
+    <sql id="BaseColumn">
+      Emp_Id,Emp_Code,Emp_Name,Emp_Sex,Emp_Age,Emp_Nation,Emp_Identity,Emp_Salary,Emp_Phone,Emp_Contact,Emp_ContactPhone,Emp_StationId,Emp_Cla,Emp_Desc
+    </sql>
+</mapper>

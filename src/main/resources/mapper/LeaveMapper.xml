@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.LeaveMapper">
+    <resultMap id="leaveMap" type="cn.jc.entity.Leave">
+        <id property="leaId" column="Lea_Id"/>
+        <result property="leaEmp" column="Lea_Emp"/>
+        <result property="leaBegin" column="Lea_Begin"/>
+        <result property="leaEnd" column="Lea_End"/>
+        <result property="leaReason" column="Lea_Reason"/>
+        <result property="leaState" column="Lea_State"/>
+    </resultMap>
+    <select id="list" resultMap="leaveMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_leave limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_leave
+    </select>
+    <insert id="insertLeave" parameterType="cn.jc.entity.Leave">
+        insert into t_leave (Lea_Emp,Lea_Begin,Lea_End,Lea_Reason,Lea_State)
+        values (#{leaEmp},#{leaBegin},#{leaEnd},#{leaReason},#{leaState})
+    </insert>
+    <delete id="deleteLeave">
+        delete from t_leave where Lea_Id =#{leaId}
+    </delete>
+    <select id="loadLeave" parameterType="java.lang.Integer" resultMap="leaveMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_leave where Lea_Id =#{leaId}
+    </select>
+    <update id="updateLeave" parameterType="cn.jc.entity.Leave">
+        update t_leave set Lea_Emp=#{leaEmp},Lea_Begin=#{leaBegin},Lea_End=#{leaEnd},Lea_Reason=#{leaReason},Lea_State=#{leaState}
+        where Lea_Id =#{leaId}
+    </update>
+    <select id="listLimitEmpCode" resultMap="leaveMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_leave where Lea_Emp=#{leaEmp} limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotalLimitEmpCode" resultType="java.lang.Integer">
+       select count(1) from t_leave where Lea_Emp=#{leaEmp}
+    </select>
+    <select id="listLimitTimeForPage" resultMap="leaveMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_leave where Lea_Emp=#{leaEmp} and Lea_End BETWEEN #{leaBegin} and #{leaEnd} limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotalLimitForPage" resultType="java.lang.Integer">
+       select count(1) from t_leave where Lea_Emp=#{leaEmp} and Lea_End BETWEEN #{leaBegin} and #{leaEnd}
+    </select>
+
+    <sql id="BaseColumn">
+      Lea_Id,Lea_Emp,Lea_Begin,Lea_End,Lea_Reason,Lea_State
+    </sql>
+</mapper>

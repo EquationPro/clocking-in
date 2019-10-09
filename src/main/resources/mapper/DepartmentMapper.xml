@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.DepartmentMapper">
+    <resultMap id="departmentMap" type="cn.jc.entity.Department">
+        <id property="depId" column="Dep_Id"/>
+        <result property="depCode" column="Dep_Code"/>
+        <result property="depName" column="Dep_Name"/>
+        <result property="depHead" column="Dep_Head"/>
+        <result property="depResponsibility" column="Dep_Responsibility"/>
+        <result property="depSuperiorId" column="Dep_SuperiorId"/>
+    </resultMap>
+    <select id="list" resultMap="departmentMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_department limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_department
+    </select>
+    <insert id="insertDepartment" parameterType="cn.jc.entity.Department">
+        insert into t_department (Dep_Code,Dep_Name,Dep_Head,Dep_Responsibility,Dep_SuperiorId)
+        values (#{depCode},#{depName},#{depHead},#{depResponsibility},#{depSuperiorId})
+    </insert>
+    <delete id="deleteDepartment">
+        delete from t_department where Dep_Id =#{depId}
+    </delete>
+    <select id="loadDepartment" parameterType="java.lang.Integer" resultMap="departmentMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_department where Dep_Id =#{depId}
+    </select>
+    <update id="updateDepartment" parameterType="cn.jc.entity.Department">
+        update t_department set Dep_Code=#{depCode},Dep_Name=#{depName},Dep_Head=#{depHead},Dep_Responsibility=#{depResponsibility},Dep_SuperiorId=#{depSuperiorId}
+        where Dep_Id =#{depId}
+    </update>
+    <select id="listAll" resultMap="departmentMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_department
+    </select>
+    <!-- 使用或者-->
+    <select id="listSearch" resultMap="departmentMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_department where Dep_Name like concat('%',#{depNameOrDepCode},'%')  or Dep_Code like concat('%',#{depNameOrDepCode},'%') limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_department  where Dep_Name like concat('%',#{depNameOrDepCode},'%') or Dep_Code like concat('%',#{depNameOrDepCode},'%')
+    </select>
+
+    <sql id="BaseColumn">
+      Dep_Id,Dep_Code,Dep_Name,Dep_Head,Dep_Responsibility,Dep_SuperiorId
+    </sql>
+</mapper>

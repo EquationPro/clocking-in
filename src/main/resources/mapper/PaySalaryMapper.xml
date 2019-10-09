@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.PaySalaryMapper">
+    <resultMap id="paySalaryMap" type="cn.jc.entity.PaySalary">
+        <id property="payId" column="Pay_Id"/>
+        <result property="payEmp" column="Pay_Emp"/>
+        <result property="payEmpName" column="Pay_EmpName" />
+        <result property="paySal" column="Pay_Sal"/>
+        <result property="payBegin" column="Pay_Begin"/>
+        <result property="payEnd" column="Pay_End"/>
+    </resultMap>
+    <select id="list" resultMap="paySalaryMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_paysalary limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_paysalary
+    </select>
+    <insert id="insertPaySalary" parameterType="cn.jc.entity.PaySalary">
+        insert into t_paysalary (Pay_Emp,Pay_EmpName,Pay_Sal,Pay_Begin,Pay_End)
+        values (#{payEmp},#{payEmpName},#{paySal},#{payBegin},#{payEnd})
+    </insert>
+    <delete id="deletePaySalary">
+        delete from t_paysalary where Pay_Id =#{payId}
+    </delete>
+    <select id="loadPaySalary" parameterType="java.lang.Integer" resultMap="paySalaryMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_paysalary where Pay_Id =#{payId}
+    </select>
+    <update id="updatePaySalary" parameterType="cn.jc.entity.PaySalary">
+        update t_paysalary set Pay_Emp=#{payEmp},Pay_EmpName=#{payEmpName},Pay_Sal=#{paySal},Pay_Begin=#{payBegin},Pay_End=#{payEnd}
+        where Pay_Id =#{payId}
+    </update>
+    <!-- 使用或者-->
+    <select id="listSearch" resultMap="paySalaryMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_paysalary where Pay_EmpName like concat('%',#{payEmpNameOrPayEmp},'%') or Pay_Emp like
+        concat('%',#{payEmpNameOrPayEmp},'%') and Pay_End BETWEEN #{payBegin} and #{payEnd} limit #{currentPage}, #{limit}
+    </select>
+    <select id="getCountTotalSearch" resultType="java.lang.Integer">
+       select count(1) from t_paysalary  where Pay_EmpName like concat('%',#{payEmpNameOrPayEmp},'%') or Pay_Emp like concat('%',#{payEmpNameOrPayEmp},'%')
+       and Pay_End BETWEEN #{payBegin} and #{payEnd}
+    </select>
+
+    <sql id="BaseColumn">
+      Pay_Id,Pay_Emp,Pay_EmpName,Pay_Sal,Pay_Begin,Pay_End
+    </sql>
+</mapper>

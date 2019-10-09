@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jc.dao.LoginMapper">
+    <resultMap id="loginMap" type="cn.jc.entity.Login">
+        <id property="id" column="Id"/>
+        <result property="username" column="UserName"/>
+        <result property="password" column="Password"/>
+    </resultMap>
+    <select id="login"  resultMap="loginMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_login where UserName =#{username} and Password=#{password}
+    </select>
+    <select id="list" resultMap="loginMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_login limit #{currentPage} ,#{limit}
+    </select>
+    <select id="getCountTotal" resultType="java.lang.Integer">
+       select count(1) from t_login
+    </select>
+    <insert id="insertLogin" parameterType="cn.jc.entity.Login">
+        insert into t_login (UserName,Password)
+        values (#{username},#{password})
+    </insert>
+    <delete id="deleteLogin">
+        delete from t_login where Id =#{id}
+    </delete>
+    <select id="loadLogin" parameterType="java.lang.Integer" resultMap="loginMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_login where Id =#{id}
+    </select>
+    <update id="updateLogin" parameterType="cn.jc.entity.Login">
+        update t_login set UserName=#{username},Password=#{password}
+        where Id =#{id}
+    </update>
+
+    <sql id="BaseColumn">
+      Id,UserName,Password
+    </sql>
+</mapper>
